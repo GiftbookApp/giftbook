@@ -66,5 +66,4 @@ repos:
     hooks:
       - id: flake8
         files: ^backend/
-        args: ["--ignore=E203,E402,F405,E501,W503"]
-        exclude: "backend/app/fundright/config/"
+        args: ["--ignore=E501","--per-file-ignores=backend/giftbook/config.py:E713"]
