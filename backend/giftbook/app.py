@@ -6,7 +6,9 @@ from litestar.config.response_cache import ResponseCacheConfig
 from litestar.middleware.rate_limit import RateLimitConfig
 from litestar.middleware.session.server_side import ServerSideSessionConfig
 from litestar.openapi import OpenAPIConfig
+from litestar_granian import GranianPlugin
 
+from giftbook.api import api
 from giftbook.config import (
     ALLOWED_HOSTS,
     CACHE_DEFAULT_EXPIRE,
@@ -30,7 +32,6 @@ from giftbook.config import (
     SESSION_COOKIE_SECURE,
 )
 from giftbook.db import close_connection_pool, start_connection_pool
-from giftbook.executor import start_executor, stop_executor
 from giftbook.stores import setup_registry_stores
 
 
@@ -60,7 +61,11 @@ def create_app() -> Litestar:
             RateLimitConfig(rate_limit=("second", RATE_LIMIT_MAX_REQUESTS_PER_SECOND), store="ratelimit").middleware
         )
 
+    on_startup = [start_connection_pool]
+    on_shutdown = [close_connection_pool]
+
     return Litestar(
+        route_handlers=[api],
         openapi_config=OpenAPIConfig(title="Giftbook API", version="0.1.0"),
         exception_handlers={Exception: report_all_errors},
         stores=setup_registry_stores(redis_url=REDIS_URL, ratelimit_enabled=RATE_LIMIT_ENABLED),
@@ -77,6 +82,7 @@ def create_app() -> Litestar:
         ),
         response_cache_config=ResponseCacheConfig(store="responses", default_expiration=CACHE_DEFAULT_EXPIRE),
         middleware=middleware,
-        on_startup=(start_executor, start_connection_pool),
-        on_shutdown=(stop_executor, close_connection_pool),
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        plugins=(GranianPlugin(),),
     )
