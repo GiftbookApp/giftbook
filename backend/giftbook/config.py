@@ -1,7 +1,9 @@
 import logging
+import multiprocessing
 from pathlib import Path
 
 from environs import Env
+from granian.constants import ThreadModes
 
 APP_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = APP_DIR.parent
@@ -32,6 +34,13 @@ def get_secret(name: str, default: object = None) -> str:
 if env.bool("GIFTBOOK_READ_DOT_ENV_FILE", default=False):
     DOT_ENV_FILE_PATH: str = env.str("GIFTBOOK_DOT_ENV_FILE_PATH", default=BACKEND_DIR / ".env")
     env.read_env(DOT_ENV_FILE_PATH)
+
+# ASGI
+ASGI_HOST: str = env.str("GIFTBOOK_ASGI_HOST", default="0.0.0.0")
+ASGI_PORT: int = env.int("GIFTBOOK_ASGI_PORT", default=3000)
+ASGI_THREADING_MODE: str = env.str("GIFTBOOK_ASGI_THREADING_MODE", default=ThreadModes.workers)
+ASGI_THREADS: int = env.int("GIFTBOOK_ASGI_THREADS", default=1)
+ASGI_WORKERS: int = env.int("GIFTBOOK_ASGI_WORKERS", default=multiprocessing.cpu_count() * 2 + 1)
 
 # CACHE
 REDIS_URL: str | None = env.str("GIFTBOOK_REDIS_URL", default=None)
