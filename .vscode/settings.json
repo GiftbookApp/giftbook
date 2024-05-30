@@ -1,0 +1,9 @@
+{
+    "ruff.format.args": [
+        "--config=backend/pyproject.toml"
+    ],
+    "ruff.lint.args": [
+        "--config=backend/pyproject.toml"
+    ],
+    "ruff.lint.run": "onSave"
+}

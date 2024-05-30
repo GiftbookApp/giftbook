@@ -161,3 +161,7 @@ cython_debug/
 
 # pyenv-virtualenv
 .python-version
+
+# ruff
+.ruff_cache
+.ruff_cache/*
