@@ -1,9 +1,17 @@
 {
+    "python.analysis.extraPaths": ["./backend/giftbook"],
+    "python.autoComplete.extraPaths": ["./backend/giftbook"],
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "python.testing.pytestEnabled": true,
     "ruff.format.args": [
-        "--config=backend/pyproject.toml"
+      "--config=./backend/pyproject.toml"
     ],
     "ruff.lint.args": [
-        "--config=backend/pyproject.toml"
+      "--config=./backend/pyproject.toml"
     ],
-    "ruff.lint.run": "onSave"
-}
+    "ruff.lint.run": "onSave",
+    "editor.formatOnSave": true,
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff"
+    }
+  }
