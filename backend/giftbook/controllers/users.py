@@ -5,6 +5,7 @@ from giftbook.config import (
     RANDOM_USERNAME_GENERATOR_RETRIES,
     RANDOM_USERNAME_SUFFIX_LENGTH,
 )
+from giftbook.services.email import send_email
 from giftbook.stores import get_otp_store
 from giftbook.tables.users import User
 from giftbook.utils.generators import generate_string
@@ -38,7 +39,7 @@ async def create_user(
     store = get_otp_store()
     otp = generate_string(length=EMAIL_OTP_LENGTH)
     await store.set(user.id, otp, expires_in=EMAIL_OTP_EXPIRES_IN_SECONDS)
-    # TODO: send code by email
+    await send_email(email_to=user.email, subject="Verify your email", text_body=f"Your OTP is: {otp}")
     return user
 
 
